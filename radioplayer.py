@@ -28,6 +28,10 @@ def do_refresh():
     subprocess.call("mpc stop -q", shell=True)
 
 
+def do_play():
+    subprocess.call("mpc play -q", shell=True)
+
+
 def do_exit():
     screen.fill(black)
     font = pygame.font.Font(None, 24)
@@ -126,4 +130,5 @@ artist_font = pygame.font.SysFont(font, 50)
 song_font = pygame.font.SysFont(font, 32)
 title = title_font.render("PiRadio", True, black)
 
+do_play()
 mainloop()
