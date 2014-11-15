@@ -54,7 +54,7 @@ def paint_screen():
     station_label = station_font.render(station, True, black)
 
     screen.blit(background, (0, 0))
-    screen.blit(title, (105, 15))
+    screen.blit(title, (105, 10))
     screen.blit(refresh, (0, 5))
     screen.blit(exit, (270, 0))
     screen.blit(station_label, (10, 50))
@@ -94,7 +94,7 @@ def mainloop():
     prev_artist = prev_song = prev_station = None
     while True:
         for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == MOUSEBUTTONDOWN:
                 process_touch(event.pos)
             if event.type == KEYDOWN:
                 process_key(event.key)
@@ -123,11 +123,10 @@ exit = pygame.image.load("exit.png")
 radioparadise = pygame.image.load("radio-paradise.jpg")
 
 # fonts
-font = 'droidsans'
-title_font = pygame.font.SysFont(font, 32)
-station_font = pygame.font.SysFont(font, 21)
-artist_font = pygame.font.SysFont(font, 50)
-song_font = pygame.font.SysFont(font, 32)
+title_font = pygame.font.Font('fonts/Vollkorn-Bold.ttf', 30)
+station_font = pygame.font.Font('fonts/Vollkorn-Regular.ttf', 20)
+artist_font = pygame.font.Font('fonts/Vollkorn-Regular.ttf', 50)
+song_font = pygame.font.Font('fonts/Vollkorn-Regular.ttf', 30)
 title = title_font.render("PiRadio", True, black)
 
 do_play()
