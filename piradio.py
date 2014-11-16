@@ -80,8 +80,8 @@ def paint_screen():
     artist_label = artist_font.render(artist, True, black)
     song_label = render_text(song, song_font, 300, -8)
 
-    song_pos = max(235 - song_label.get_height(), 120)
-    artist_pos = song_pos - 55
+    song_pos = max(235 - song_label.get_height(), 130)
+    artist_pos = song_pos - 60
 
     screen.blit(background, (0, 0))
     screen.blit(title, (105, 10))
