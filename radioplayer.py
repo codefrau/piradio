@@ -41,6 +41,33 @@ def do_exit():
     time.sleep(1)
     sys.exit()
 
+def word_wrap(text, font, width):
+    lines = []
+    line = ""
+    x = 0;
+    for word in text.split():
+        w, h = font.size(word)
+        if x + w > width:
+            if (line):
+                lines.append(line)
+            line = ""
+            x = 0
+        line += word + " "
+        x += w + font.size(" ")[0]
+    if line:
+        lines.append(line)
+    return lines
+
+def render_text(text, font, width, gap = 0):
+    lines = word_wrap(text, font, width)
+    h = font.get_linesize() + gap
+    paragraph = pygame.Surface((width, h * max(len(lines), 1)), SRCALPHA, screen)
+    y = 0
+    for line in lines:
+        rendered = font.render(line, True, black)
+        paragraph.blit(rendered, (0, y))
+        y += h
+    return paragraph
 
 def paint_screen():
     # special hack: show pic of Bill and Rebecca during spoken announcements
@@ -49,17 +76,20 @@ def paint_screen():
         pygame.display.flip()
         return
 
-    artist_label = artist_font.render(artist, True, black)
-    song_label = song_font.render(song, True, black)
     station_label = station_font.render(station, True, black)
+    artist_label = artist_font.render(artist, True, black)
+    song_label = render_text(song, song_font, 300, -8)
+
+    song_pos = max(235 - song_label.get_height(), 120)
+    artist_pos = song_pos - 55
 
     screen.blit(background, (0, 0))
     screen.blit(title, (105, 10))
     screen.blit(refresh, (0, 5))
     screen.blit(exit, (270, 0))
     screen.blit(station_label, (10, 50))
-    screen.blit(artist_label, (10, 100))
-    screen.blit(song_label, (10, 160))
+    screen.blit(artist_label, (10, artist_pos))
+    screen.blit(song_label, (10, song_pos))
 
     pygame.display.flip()
 
