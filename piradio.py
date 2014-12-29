@@ -106,8 +106,11 @@ def get_shairport_status():
         lines = info.decode('utf-8').split("\n")
         artist = lines[0].split("=",1)[1]
         song = lines[1].split("=",1)[1]
-        album = lines[2].split("=",1)[1]
-        station = "AirPlay: %s" % album
+        try:
+            peer = subprocess.check_output("lsof -c shairport -a -iTCP:rfe -sTCP:ESTABLISHED|grep ESTABLISHED|sed 's/.*->//;s/[:.].*//;s/-/ /g'", shell = True)
+            station = "AirPlay: %s" % peer.strip()
+        except OSError:
+            station = "AirPlay"
 
 def get_mpd_status():
     global artist, song, station
