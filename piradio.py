@@ -2,6 +2,9 @@
 import sys, time, subprocess, os, glob, pygame
 from pygame.locals import *
 
+shairport_metadir = "/var/run/shairport"
+shairport_fifo = None
+
 os.environ["SDL_FBDEV"] = "/dev/fb1"
 os.environ["SDL_MOUSEDEV"] = "/dev/input/touchscreen"
 os.environ["SDL_MOUSEDRV"] = "TSLIB"
@@ -93,6 +96,24 @@ def paint_screen():
 
     pygame.display.flip()
 
+def get_shairport_status():
+    global artist, song, station, shairport_fifo
+    if shairport_fifo is None:
+        now_playing = os.path.join(shairport_metadir, "now_playing")
+        try:
+            shairport_fifo = os.open(now_playing, os.O_RDONLY | os.O_NONBLOCK)
+        except OSError:
+            return
+    try:
+        info = os.read(shairport_fifo, 2048)
+    except OSError:
+        return
+    if len(info) > 0:
+        lines = info.split("\n")
+        artist = lines[0].split("=",1)[1]
+        song = lines[1].split("=",1)[1]
+        album = lines[2].split("=",1)[1]
+        station = "AirPlay: %s" % album
 
 def get_mpd_status():
     global artist, song, station
@@ -108,6 +129,12 @@ def get_mpd_status():
         current = "Error: cannot talk to mpd"
         status = "[not running]"
         volume = "?"
+
+    if status.startswith("[paused]"):
+        if not station.startswith("AirPlay:"):
+            artist = song = ""
+        get_shairport_status()
+        return
 
     if "$" in current:
         station, info = current.split("$", 1)
@@ -158,6 +185,7 @@ station_font = pygame.font.Font('fonts/Vollkorn-Regular.ttf', 20)
 artist_font = pygame.font.Font('fonts/Vollkorn-Regular.ttf', 50)
 song_font = pygame.font.Font('fonts/Vollkorn-Regular.ttf', 30)
 title = title_font.render("PiRadio", True, black)
+station = artist = song = ""
 
 do_play()
 mainloop()
