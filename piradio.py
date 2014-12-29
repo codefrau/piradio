@@ -103,7 +103,7 @@ def get_shairport_status():
     except OSError:
         return
     if len(info) > 0:
-        lines = info.split("\n")
+        lines = info.decode('utf-8').split("\n")
         artist = lines[0].split("=",1)[1]
         song = lines[1].split("=",1)[1]
         album = lines[2].split("=",1)[1]
