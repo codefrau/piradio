@@ -73,12 +73,6 @@ def render_text(text, font, width, gap = 0):
     return paragraph
 
 def paint_screen():
-    # special hack: show pic of Bill and Rebecca during spoken announcements
-    if artist == "Radio Paradise":
-        screen.blit(radioparadise, (0, 0))
-        pygame.display.flip()
-        return
-
     station_label = station_font.render(station, True, black)
     artist_label = artist_font.render(artist, True, black)
     song_label = render_text(song, song_font, 300, -8)
@@ -177,7 +171,6 @@ white = 255, 255, 255
 background = pygame.image.load("background.jpg")
 refresh = pygame.image.load("refresh.png")
 exit = pygame.image.load("exit.png")
-radioparadise = pygame.image.load("radio-paradise.jpg")
 
 # fonts
 title_font = pygame.font.Font('fonts/Vollkorn-Bold.ttf', 30)
